@@ -1,0 +1,62 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'LonganApp/style.css' %}" />
+<link href='//fonts.googleapis.com/css?family=Alegreya Sans SC' rel='stylesheet'/>
+<link href='//fonts.googleapis.com/css?family=Libre Baskerville' rel='stylesheet'>
+
+<script>
+function searchByName() {
+    var input, filter, table, tr, td, i;
+    input = document.getElementById("inputField");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("dataTable");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[0];
+        if (td) {
+            if (td.innerHTML.toUpperCase().indexOf(filter) > -1) tr[i].style.display = "";
+            else tr[i].style.display = "none";
+        }
+    }
+}
+</script>
+<title>Longan</title>
+
+<ul id="header">
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/index.html">Home</a></li>
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/careerfair.html">Career Fairs</a></li>
+    <li class="headerlist"><a class="active" href="https://cs411spring2017.pythonanywhere.com/company.html">Companies</a></li>
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/map.html">Map</a></li>
+    <li class="headerlist"><a href="#favorites">Favorites</a></li>
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/settings.html">Settings</a></li>
+</ul>
+
+<div id = "data">
+    <h1>Test</h1>
+    <h3>Filter by:</h3>
+    <select>
+        {% for careerfair in careerfairs %}
+        <option value = "{{careerfair.name}}">{{careerfair.name}}</option>
+        {% endfor %}
+    </select>
+    <table id = "dataTable">
+        <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Website</th>
+            <th> </th>
+        </tr>
+        {% for company in companies %}
+        <tr>
+            <td>{{ company.name }}</td>
+            <td>{{ company.address }}</td>
+            <td>{{ company.website}}</td>
+            <td>
+                <form action = "{% url "deleteCompany" %}" method = "POST">
+                {% csrf_token %}
+                    <button type="submit" value="{{ company.name }}" name="companyName">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>

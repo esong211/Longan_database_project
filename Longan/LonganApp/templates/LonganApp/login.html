@@ -1,0 +1,49 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'LonganApp/header.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'LonganApp/style.css' %}" />
+<link href='//fonts.googleapis.com/css?family=Alegreya Sans SC' rel='stylesheet'/>
+<link href='//fonts.googleapis.com/css?family=Libre Baskerville' rel='stylesheet'>
+
+<title>Longan</title>
+
+<ul id="header">
+    <li class="headerlist"><a class="active" href="https://cs411spring2017.pythonanywhere.com/">Home</a></li>
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/careerfair.html">Career Fairs</a></li>
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/company.html">Companies</a></li>
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/map.html">Map</a></li>
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/favorites.html">Favorites</a></li>
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/settings.html">Settings</a></li>
+</ul>
+
+<div class = "loginSignupForm">
+    <form action = "{% url "loginRequest" %}" method = "POST">
+                    {% csrf_token %}
+      <div class="container">
+        <h3><b>Login</b></h3>
+        <label><b>Username</b></label>
+        <input class="inputUP" type="text" placeholder="Enter Username" name="usernameLogin" required>
+        </br>
+        <label><b>Password</b></label>
+        <input class="inputUP" type="password" placeholder="Enter Password" name="passwordLogin" required>
+        </br>
+        <button class="loginButton" type="submit">Login</button>
+      </div>
+    </form>
+
+    <form action = "{% url "signupRequest" %}" method = "POST">
+                    {% csrf_token %}
+      <div class="container">
+        <h3><b>Sign Up</b></h3>
+        <label><b>Email</b></label>
+        <input class="inputUP" type="text" placeholder="Enter Email" name="emailSignup" required>
+        </br>
+        <label><b>Username</b></label>
+        <input class="inputUP" type="text" placeholder="Enter Username" name="usernameSignup" required>
+        </br>
+        <label><b>Password</b></label>
+        <input class="inputUP" type="password" placeholder="Enter Password" name="passwordSignup" required>
+        </br>
+        <button class="loginButton" type="submit">Sign Up</button>
+      </div>
+    </form>
+</div>

@@ -1,0 +1,37 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'LonganApp/style.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'LonganApp/header.css' %}" />
+<link href='//fonts.googleapis.com/css?family=Alegreya Sans SC' rel='stylesheet'/>
+<link href='//fonts.googleapis.com/css?family=Libre Baskerville' rel='stylesheet'>
+
+<!-----
+<script>
+function searchByName() {
+    var input, filter, table, tr, td, i;
+    input = document.getElementById("inputField");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("dataTable");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+        if (td.innerHTML.toUpperCase().indexOf(filter) > -1) tr[i].style.display = "";
+        else tr[i].style.display = "none";
+    }
+}
+</script>
+----->
+
+<title>Longan</title>
+
+<ul id="header">
+    <li class="headerlist"><a class="active" href="https://cs411spring2017.pythonanywhere.com/">Home</a></li>
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/careerfair.html">Career Fairs</a></li>
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/company.html">Companies</a></li>
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/map.html">Map</a></li>
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/favorites.html">Favorites</a></li>
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/settings.html">Settings</a></li>
+</ul>
+<div>
+    <img style="margin:30px;" src="{% static 'LonganApp/Longan.jpg' %}" align="middle">
+</div>

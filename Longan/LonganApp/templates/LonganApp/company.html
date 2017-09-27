@@ -1,0 +1,163 @@
+{% load static %}
+{% load i18n %}
+<link rel="stylesheet" type="text/css" href="{% static 'LonganApp/header.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'LonganApp/style.css' %}" />
+<link href='//fonts.googleapis.com/css?family=Alegreya Sans SC' rel='stylesheet'/>
+<link href='//fonts.googleapis.com/css?family=Libre Baskerville' rel='stylesheet'>
+
+<script>
+function searchByName() {
+    var input, filter, table, tr, td, i;
+    input = document.getElementById("inputField");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("dataTable");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[0];
+        if (td) {
+            if (td.innerHTML.toUpperCase().indexOf(filter) > -1) tr[i].style.display = "";
+            else tr[i].style.display = "none";
+        }
+    }
+}
+var addCounter = 0;
+function addCompany() {
+    if(addCounter==0) {
+        newCompany = document.getElementById("newCompanyDiv");
+        var token = newCompany.innerHTML;
+        newCompany.innerHTML = token + "<input type=\"text\" placeholder=\"Name\" name=\"name\" + counter><input type=\"text\" placeholder=\"Address\" name=\"address\" + counter><input type=\"text\" placeholder=\"Website\" name=\"website\" + counter><button>Save</button>";
+        addCounter++;
+    }
+}
+var updateCounter = 0;
+function updateCompany(name, address, website) {
+    if(updateCounter==0) {
+        updateCompany = document.getElementById("updateCompanyDiv");
+        var token = updateCompany.innerHTML;
+        updateCompany.innerHTML = token + "<input type=\"text\" value=\"" + name + "\" placeholder=\"" + name + "\" name=\"name\" + counter><input type=\"text\"  value=\"" + address + "\"placeholder=\"" + address + "\" name=\"address\" + counter><input type=\"text\"  value=\"" + website + "\"placeholder=\"" + website + "\" name=\"website\" + counter><input type=\"hidden\" name=\"oldName\" value=\"" + name +"\" + counter><button>Save</button>";
+        updateCounter++;
+    }
+}
+</script>
+<title>Longan</title>
+
+<ul id="header">
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/">Home</a></a></li>
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/careerfair.html">Career Fairs</a></li>
+    <li class="headerlist"><a class="active" href="https://cs411spring2017.pythonanywhere.com/company.html">Companies</a></li>
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/map.html">Map</a></li>
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/favorites.html">Favorites</a></li>
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/settings.html">Settings</a></li>
+</ul>
+
+<style type="text/css">
+td a { display: block; width: 100%; height: 100%; }
+</style>
+
+<div id = "data">
+    <h1>Companies</h1>
+    <input type="text" id="inputField" class="inputUP" onkeyup="searchByName()" placeholder="Search by name" title="Type in a name">
+    <h3>Filter by:</h3>
+    <form id = "filterByCareerfair" action = "{% url "filterByCareerfair" %}" method = "POST">
+        {% csrf_token %}
+        <select name="careerfair" onchange="this.form.submit()">
+            <option value=""></option>
+            {% for careerfair in careerfairs %}
+                {% if careerfair.name == filtered_by %}
+                    <option value = "{{careerfair.name}}" selected="selected">{{careerfair.name}}</option>
+                {% else %}
+                    <option value = "{{careerfair.name}}">{{careerfair.name}}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    </form>
+    <div>
+        <form id = "updateCompanyDiv" action = "{% url "updateCompany" %}" method = "POST">
+                {% csrf_token %}
+        </form>
+    </div>
+    {% if superuser == 'true' %}
+    <button onclick="addCompany()" id="add">Add Company</button>
+    {% endif %}
+    <div>
+        <form id = "newCompanyDiv" action = "{% url "addCompany" %}" method = "POST">
+        {% csrf_token %}
+        </form>
+    </div>
+    <table id = "dataTable">
+        <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Website</th>
+            {% if superuser == 'true' %}
+                <th> </th>
+                <th> </th>
+            {% endif %}
+            {% if authenticated == 'true' %}
+            <th> </th>
+            {% endif %}
+        </tr>
+
+        {% for suggestion in suggestions %}
+        <tr class="suggestion">
+            <td>{{ suggestion.name }}</td>
+            <td>{{ suggestion.address }}</td>
+            <td>{{ suggestion.website }}</td>
+            {% if superuser == 'true' %}
+                <td>
+                    <button onclick="updateCompany('{{suggestion.name}}','{{suggestion.address}}','{{suggestion.website}}')">Update</button>
+                </td>
+                <td>
+                    <form action = "{% url "deleteCompany" %}" method = "POST">
+                    {% csrf_token %}
+                        <button type="submit" value="{{ suggestion.name }}" name="companyName">Delete</button>
+                    </form>
+                </td>
+            {% endif %}
+            {% if authenticated == 'true' %}
+            <td>
+                <form action = "{% url "addCompanyToFavorites" %}" method = "POST">
+                {% csrf_token %}
+                    <button type="submit" value="{{suggestion.name}}" name="companyName">Favorite</button>
+                </form>
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+
+        {% for company in companies %}
+            {% trans 'false' as found %}
+            {% for suggestion in suggestions %}
+                {% if suggestion.name == company.name %}
+                    {% trans 'true' as found %}
+                {% endif %}
+            {% endfor %}
+            {% if found %}
+            <tr>
+                <td>{{ company.name }}</td>
+                <td>{{ company.address }}</td>
+                <td>{{ company.website }}</td>
+                {% if superuser == 'true' %}
+                    <td>
+                        <button onclick="updateCompany('{{company.name}}','{{company.address}}','{{company.website}}')">Update</button>
+                    </td>
+                    <td>
+                        <form action = "{% url "deleteCompany" %}" method = "POST">
+                        {% csrf_token %}
+                            <button type="submit" value="{{ company.name }}" name="companyName">Delete</button>
+                        </form>
+                    </td>
+                {% endif %}
+                {% if authenticated == 'true' %}
+                <td>
+                    <form action = "{% url "addCompanyToFavorites" %}" method = "POST">
+                    {% csrf_token %}
+                        <button type="submit" value="{{company.name}}" name="companyName">Favorite</button>
+                    </form>
+                </td>
+                {% endif %}
+            </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+</div>

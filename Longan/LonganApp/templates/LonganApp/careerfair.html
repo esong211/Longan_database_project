@@ -1,0 +1,113 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'LonganApp/header.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'LonganApp/style.css' %}" />
+<link href='//fonts.googleapis.com/css?family=Alegreya Sans SC' rel='stylesheet'/>
+<link href='//fonts.googleapis.com/css?family=Libre Baskerville' rel='stylesheet'>
+
+<script>
+function searchByName() {
+    var input, filter, table, tr, td, i;
+    input = document.getElementById("inputField");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("dataTable");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[0];
+        if (td) {
+            if (td.innerHTML.toUpperCase().indexOf(filter) > -1) tr[i].style.display = "";
+            else tr[i].style.display = "none";
+        }
+    }
+}
+var counter = 0;
+function addCareerFair() {
+    if(counter==0) {
+        newCareerFair = document.getElementById("newCareerFairDiv");
+        var token = newCareerFair.innerHTML;
+        newCareerFair.innerHTML = token + "<input type=\"text\" placeholder=\"Name\" name=\"name\" + counter><input type=\"text\" placeholder=\"Year\" name=\"year\" + counter><input type=\"text\" placeholder=\"Semester\" name=\"semester\" + counter><input type=\"text\" placeholder=\"Location\" name=\"location\" + counter><button>Save</button>";
+        counter++;
+    }
+}
+var updateCounter = 0;
+function updateCareerfair(name, year, semester, location) {
+    if(updateCounter==0) {
+        updateCareerfair = document.getElementById("updateCareerfairDiv");
+        var token = updateCareerfair.innerHTML;
+        updateCareerfair.innerHTML = token + "<input type=\"text\" value\""+name+"\" placeholder=\"" + name + "\" name=\"name\" + counter><input type=\"text\" value\""+year+"\" placeholder=\"" + year + "\" name=\"year\" + counter><input type=\"text\" value\""+semester+"\" placeholder=\"" + semester + "\" name=\"semester\" + counter><input type=\"text\" value\""+location+"\" placeholder=\"" + location + "\" name=\"location\" + counter><input type=\"hidden\" value=\""+ name +"\" name=\"oldName\" + counter><button>Save</button>";
+        updateCounter++;
+    }
+}
+</script>
+<title>Longan</title>
+
+<ul id="header">
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/">Home</a></li>
+    <li class="headerlist"><a class="active" href="https://cs411spring2017.pythonanywhere.com/careerfair.html">Career Fairs</a></li>
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/company.html">Companies</a></li>
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/map.html">Map</a></li>
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/favorites.html">Favorites</a></li>
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/settings.html">Settings</a></li>
+</ul>
+
+<div id = "data">
+    <h1>Career Fairs</h1>
+    <input type="text" id="inputField"  class="inputUP" onkeyup="searchByName()" placeholder="Search by name" title="Type in a name">
+    <h3>Filter by:</h3>
+    <form id="filterByCompany" action = "{% url "filterByCompany" %}" method = "POST">
+        {% csrf_token %}
+        <select name="company" onchange="this.form.submit()">
+            <option value=""></option>
+            {% for company in companies %}
+                {% if company.name == filtered_by %}
+                    <option value = "{{company.name}}" selected="selected">{{company.name}}</option>
+                {% else %}
+                    <option value = "{{company.name}}">{{company.name}}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    </form>
+    {% if superuser == 'true' %}
+        <button onclick="addCareerFair()" id="add">Add Career Fair</button>
+    {% endif %}
+    <div>
+        <form id = "updateCareerfairDiv" action = "{% url "updateCareerfair" %}" method = "POST">
+                {% csrf_token %}
+        </form>
+    </div>
+    <div>
+        <form id = "newCareerFairDiv" action = "{% url "addCareerfair" %}" method = "POST">
+        {% csrf_token %}
+        </form>
+    </div>
+    <table id = "dataTable">
+        <tr>
+            <th>Name</th>
+            <th>Year</th>
+            <th>Semester</th>
+            <th>Location</th>
+            {% if superuser == 'true' %}
+                <th> </th>
+                <th> </th>
+            {% endif %}
+        </tr>
+        {% for careerfair in careerfairs %}
+        <tr>
+            <td>{{ careerfair.name }}</td>
+            <td>{{ careerfair.year }}</td>
+            <td>{{ careerfair.semester}}</td>
+            <td>{{ careerfair.location}}</td>
+            {% if superuser == 'true' %}
+                <td>
+                    <button onclick="updateCareerfair('{{careerfair.name}}','{{careerfair.year}}','{{careerfair.semester}}','{{careerfair.location}}')">Update</button>
+                </td>
+                <td>
+                    <form action = "{% url "deleteCareerfair" %}" method = "POST">
+                    {% csrf_token %}
+                        <button type="submit" value="{{ careerfair.name }}" name="careerfairName">Delete</button>
+                    </form>
+                </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </table>
+</div>

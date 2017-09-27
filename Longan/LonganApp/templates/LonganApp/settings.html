@@ -1,0 +1,56 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'LonganApp/header.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'LonganApp/style.css' %}" />
+<link href='//fonts.googleapis.com/css?family=Alegreya Sans SC' rel='stylesheet'/>
+<link href='//fonts.googleapis.com/css?family=Libre Baskerville' rel='stylesheet'>
+
+<title>Longan</title>
+
+<ul id="header">
+    <li class="headerlist"><a class="active" href="https://cs411spring2017.pythonanywhere.com/">Home</a></li>
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/careerfair.html">Career Fairs</a></li>
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/company.html">Companies</a></li>
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/map.html">Map</a></li>
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/favorites.html">Favorites</a></li>
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/settings.html">Settings</a></li>
+</ul>
+
+<h3>Welcome, {{email}}</h3>
+
+<div id="data">
+    <h1>Favorite Industries</h1>
+        <form action = "{% url "addIndustryToPreferences" %}" method = "POST">
+            {% csrf_token %}
+            <select name="industryName">
+                {% for industry in industries %}
+                    <option value = "{{industry.name}}">{{industry.name}}</option>
+                {% endfor %}
+            </select>
+            <button id="add" type="submit">Add to Favorite Industries</button>
+        </form>
+
+    <table id = "dataTable">
+        <tr>
+            <th>Industry</th>
+            <th> </th>
+        </tr>
+        {% for preferred in preferred_industries %}
+        <tr>
+            <td>{{ preferred.industry_name }}</td>
+            <td>
+                <form action = "{% url "removeFromPreferences" %}" method = "POST">
+                {% csrf_token %}
+                    <button type="submit" value="{{ preferred.industry_name }}" name="industryName">Remove</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<form action = "{% url "logoutRequest" %}" method = "POST">
+                {% csrf_token %}
+  <div class="container">
+    <button class="loginButton" type="submit">Logout</button>
+  </div>
+</form>

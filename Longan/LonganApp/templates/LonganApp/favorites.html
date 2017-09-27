@@ -1,0 +1,44 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'LonganApp/header.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'LonganApp/style.css' %}" />
+<link href='//fonts.googleapis.com/css?family=Alegreya Sans SC' rel='stylesheet'/>
+<link href='//fonts.googleapis.com/css?family=Libre Baskerville' rel='stylesheet'>
+
+<title>Longan</title>
+
+<ul id="header">
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/">Home</a></li>
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/careerfair.html">Career Fairs</a></li>
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/company.html">Companies</a></li>
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/map.html">Map</a></li>
+    <li class="headerlist"><a class="active" href="https://cs411spring2017.pythonanywhere.com/favorites.html">Favorites</a></li>
+    <li class="headerlist"><a href="https://cs411spring2017.pythonanywhere.com/settings.html">Settings</a></li>
+</ul>
+
+<h3>Welcome, {{email}}</h3>
+
+<div id="data">
+    <h1>Favorite Companies</h1>
+
+    <table id = "dataTable">
+        <tr>
+            <th>Company</th>
+            <th>Address</th>
+            <th>Website</th>
+            <th> </th>
+        </tr>
+        {% for company in companies %}
+        <tr>
+            <td>{{ company.name }}</td>
+            <td>{{ company.address }}</td>
+            <td>{{ company.website}}</td>
+            <td>
+                <form action = "{% url "unfavoriteCompany" %}" method = "POST">
+                {% csrf_token %}
+                    <button type="submit" value="{{ company.name }}" name="companyName">Unfavorite</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
