@@ -9,11 +9,6 @@ Longan is an application that curates career fair information from multiple univ
 * Compare career fairs over time (i.e., by year, fall vs. spring semesters)
 
 
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-
 ## Built With
 
 ### Client Side
