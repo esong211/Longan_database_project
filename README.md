@@ -37,7 +37,3 @@ Jing Rong Lim
 * **Gabrielle Chen**
 * **Hong Ngai Ip**
 * **Jing Rong Lim**
-
-## System Demo URL
-
-* https://cs411spring2017.pythonanywhere.com/
