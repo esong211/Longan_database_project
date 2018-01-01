@@ -26,11 +26,6 @@ Longan is an application that curates career fair information from multiple univ
 ### Database
 * [MySQL]
 
-SeokHyun Song
-Gabrielle Chen
-Hong Ngai Ip
-Jing Rong Lim
-
 ## Authors
 
 * **SeokHyun Song**
